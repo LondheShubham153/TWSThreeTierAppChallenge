@@ -27,19 +27,7 @@ spec:
         imagePullPolicy: Always
         env:
           - name: REACT_APP_BACKEND_URL
-            value: "http://app.trainwithshubham.com/api/tasks" #$API_ELB_PUBLIC_FQDN #add your API_Load_Balancer DNS manually here if app does not run
+            value: "http://app.trainwithshubham.com/api/tasks" 
         ports:
         - containerPort: 3000
-        # livenessProbe:
-        #   httpGet:
-        #     path: /
-        #     port: 3000
-        #   initialDelaySeconds: 2
-        #   periodSeconds: 5
-        # readinessProbe:
-        #   httpGet:
-        #      path: /
-        #      port: 3000
-        #   initialDelaySeconds: 5
-        #   periodSeconds: 5
-        #   successThreshold: 1
+       
