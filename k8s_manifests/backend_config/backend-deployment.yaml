@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: public.ecr.aws/w8u5e4v2/workshop-backend:v1
+        image: public.ecr.aws/u6o2f0j6/workshop-backend:latest
         imagePullPolicy: Always
         env:
           - name: MONGO_CONN_STR
@@ -40,6 +40,11 @@ spec:
                 key: password
         ports:
         - containerPort: 8080
+        resources:
+          requests:
+            cpu: "100m"
+          limits:
+            cpu: "200m"
         livenessProbe:
           httpGet:
             path: /ok
