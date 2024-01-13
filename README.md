@@ -4,6 +4,10 @@
 This repository hosts the `#TWSThreeTierAppChallenge` for the TWS community. 
 The challenge involves deploying a Three-Tier Web Application using ReactJS, NodeJS, and MongoDB, with deployment on AWS EKS. Participants are encouraged to deploy the application, add creative enhancements, and submit a Pull Request (PR). Merged PRs will earn exciting prizes!
 
+** Get The Challenge here **
+
+[![YouTube Video](https://i.ytimg.com/vi/tvWQRTbMS1g/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCMGjxNnKJTJmJF-Decs-7S1IS67g)](https://youtu.be/tvWQRTbMS1g?si=eki-boMemxr4PU7-)
+
 ## Prerequisites
 - Basic knowledge of Docker, and AWS services.
 - An AWS account with necessary permissions.
