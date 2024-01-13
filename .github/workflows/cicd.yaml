@@ -65,7 +65,7 @@ jobs:
       # Deploying Configs to EKS
     - name: applying k8s configs
       run: |
-        kubectl create namespace ${{ env.AWS_EKS_CLUSTER_NAMESPACE }} || true
+        kubectl create namespace ${{ env.AWS_EKS_CLUSTER_NAMESPACE }}
         kubectl apply -f k8s_manifests/ 
 
       # Installing and Deploying Load Balancer 
