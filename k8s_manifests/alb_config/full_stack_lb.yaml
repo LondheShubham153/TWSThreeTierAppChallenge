@@ -28,3 +28,10 @@ spec:
                 name: frontend
                 port:
                   number: 3000
+          - path: /metrics
+            pathType: Prefix
+            backend:
+              service:
+                name: stable-kube-prometheus-sta-prometheus
+                port:
+                  number: 9090
