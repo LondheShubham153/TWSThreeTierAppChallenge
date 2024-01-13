@@ -17,6 +17,8 @@ env:
   AWS_ECR_USERNAME: ${{ secrets.AWS_ECR_USERNAME }}
   AWS_ECR_BACKEND: ${{ secrets.AWS_ECR_BACKEND }}
   BACKEND_DOCKER_IMAGE: ${{ secrets.BACKEND_DOCKER_IMAGE }}
+  AWS_EKS_CLUSTER_NAME: ${{ secrets.AWS_EKS_CLUSTER_NAME }}
+  AWS_EKS_CLUSTER_NAMESPACE: ${{ secrets.AWS_EKS_CLUSTER_NAMESPACE }}
 
 jobs:
   build-and-push:
@@ -34,11 +36,13 @@ jobs:
         aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
+      # ECR Login
     - name: Login to Amazon ECR
       run: |
         aws ecr-public get-login-password --region ${{ env.AWS_REGION }} | docker login --username ${{ env.AWS_ECR_USERNAME }} --password-stdin ${{ env.AWS_ECR_FRONTEND }}
         aws ecr-public get-login-password --region ${{ env.AWS_REGION }} | docker login --username ${{ env.AWS_ECR_USERNAME }} --password-stdin ${{ env.AWS_ECR_BACKEND }}
-        
+
+      # Building and Tagging Docker Image  
     - name: Build and Tag Docker Image
       run: |
         docker build -t ${{ env.FRONTEND_DOCKER_IMAGE }} ./frontend/.
@@ -47,9 +51,18 @@ jobs:
         docker build -t ${{ env.BACKEND_DOCKER_IMAGE }} ./backend/.
         docker tag ${{ env.BACKEND_DOCKER_IMAGE }}:latest ${{ env.AWS_ECR_BACKEND }}/${{ env.BACKEND_DOCKER_IMAGE }}:latest
 
+      # Pushing Docker Image to ECR
     - name: Push Docker Image to ECR
       run:  |
         docker push ${{ env.AWS_ECR_FRONTEND }}/${{ env.FRONTEND_DOCKER_IMAGE }}:latest
         docker push ${{ env.AWS_ECR_BACKEND }}/${{ env.BACKEND_DOCKER_IMAGE }}:latest
 
-    
+      # Updating kubeconfig
+    - name: update kubeconfig
+      run: aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.AWS_EKS_CLUSTER_NAME }}
+
+      # Deploying Configs to EKS
+    - name: applying k8s configs
+      run: |
+        kubectl create namespace ${{ env.AWS_EKS_CLUSTER_NAMESPACE }}
+        kubectl apply -f k8s_manifests/ 
