@@ -1,7 +1,7 @@
 # Stage 1:
 
 # Use the official Node.js 14 image as a base image
-FROM node:14 AS node-frontend
+FROM node:14 AS frontend
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
@@ -24,7 +24,7 @@ FROM node:14-alpine
 WORKDIR /usr/src/app
 
 # Copy dependencies from Stage 1
-COPY --from=node-frontend /usr/src/app /usr/src/app
+COPY --from=frontend /usr/src/app /usr/src/app
 
 # Specify the command to run when the container starts
 CMD [ "npm", "start" ]
