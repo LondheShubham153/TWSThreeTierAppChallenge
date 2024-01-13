@@ -19,6 +19,7 @@ env:
   BACKEND_DOCKER_IMAGE: ${{ secrets.BACKEND_DOCKER_IMAGE }}
   AWS_EKS_CLUSTER_NAME: ${{ secrets.AWS_EKS_CLUSTER_NAME }}
   AWS_EKS_CLUSTER_NAMESPACE: ${{ secrets.AWS_EKS_CLUSTER_NAMESPACE }}
+  AWS_EKS_CLUSTER_REGION: ${{ secrets.AWS_EKS_CLUSTER_REGION }}
 
 jobs:
   build-and-push:
@@ -59,7 +60,7 @@ jobs:
 
       # Updating kubeconfig
     - name: update kubeconfig
-      run: aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.AWS_EKS_CLUSTER_NAME }}
+      run: aws eks update-kubeconfig --region ${{ env.AWS_EKS_CLUSTER_REGION }} --name ${{ env.AWS_EKS_CLUSTER_NAME }}
 
       # Deploying Configs to EKS
     - name: applying k8s configs
