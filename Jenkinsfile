@@ -37,7 +37,7 @@ pipeline {
             }
         }
 
-        stage('Upload DB Image') {
+        stage('Upload Frontend Image') {
           steps{
             script {
               docker. withRegistry( ecr_Registry, registryCredential ) {
@@ -51,6 +51,15 @@ pipeline {
           steps{
             sh 'docker system prune -af'
           }
+        }
+
+        stage('Deploy to EKS Cluster') {
+            steps {
+                withKubeConfig(caCertificate: '', clusterName: 'demo', contextName: '', credentialsId: 'k8s-token', namespace: 'workshop', restrictKubeConfigAccess: false, serverUrl: 'https://925DDA43F038104D630C448555042563.gr7.us-east-1.eks.amazonaws.com') {
+    			      echo 'deploying vprodb to eks-cluster...'
+	                sh 'kubectl -f k8s_manifests/mongo .'
+		            }
+            }
         }
     }
 }

@@ -25,7 +25,7 @@ spec:
       - name: ecr-registry
       containers:
       - name: api
-        image: 807373741966.dkr.ecr.us-east-1.amazonaws.com/3tier_backend:latest
+        image: ${backendRegistry}:${BUILD_NUMBER}
         imagePullPolicy: Always
         env:
           - name: MONGO_CONN_STR

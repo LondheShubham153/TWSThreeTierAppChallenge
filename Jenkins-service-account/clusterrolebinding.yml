@@ -1,0 +1,12 @@
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: jenkins-pv-role-binding
+subjects:
+- kind: ServiceAccount
+  name: jenkins
+  namespace: workshop  # Update the namespace if needed
+roleRef:
+  kind: ClusterRole
+  name: jenkins-pv-role
+  apiGroup: rbac.authorization.k8s.io
