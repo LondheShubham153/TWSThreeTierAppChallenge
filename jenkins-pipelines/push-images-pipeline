@@ -8,7 +8,7 @@ pipeline{
                 
                 dir('app-code') {
                      git url: "https://github.com/Aniket-d-d/TWSThreeTierAppChallenge.git", branch: "ak-automate" //clone-the app-code
-                     sh "chomod +x update_variables.sh"
+                     sh "chmod +x update_variables.sh"
                      sh "sudo ./update_variables.sh"
                 }
             }
