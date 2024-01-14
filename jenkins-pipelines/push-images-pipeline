@@ -36,7 +36,7 @@ pipeline{
                 AWS_CREDS = credentials('aws-cli-cred')   //docker-credentials
             }
             steps{
-                 
+                 dir('app-code'){
                  sh "aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/ALIAS_INFO"
 				 sh "docker tag three-tier-frontend:latest public.ecr.aws/ALIAS_INFO/three-tier-frontend:latest"
 				 sh "docker push public.ecr.aws/ALIAS_INFO/three-tier-frontend:latest"
@@ -46,6 +46,7 @@ pipeline{
 				 sh "docker tag three-tier-backend:latest public.ecr.aws/ALIAS_INFO/three-tier-backend:latest"
 				 sh "docker push public.ecr.aws/ALIAS_INFO/three-tier-backend:latest"
 				 echo "Backend Image Pushed Successfully"
+			}
         }
         
    	 }
