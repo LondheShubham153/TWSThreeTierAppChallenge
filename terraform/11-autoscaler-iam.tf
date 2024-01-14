@@ -30,7 +30,7 @@ resource "aws_iam_role" "autoscaling_role" {
       {
         Effect = "Allow",
         Principal = {
-          Service = "autoscaling.amazonaws.com",
+          # Service = "autoscaling.amazonaws.com",
           Federated = aws_iam_openid_connect_provider.eks.arn
         },
         Action = "sts:AssumeRoleWithWebIdentity",
