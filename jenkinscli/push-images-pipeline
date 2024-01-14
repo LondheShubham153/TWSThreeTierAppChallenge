@@ -1,0 +1,51 @@
+pipeline{
+    agent any //defining agent
+
+    stages{
+	
+	    stage('app-code'){
+            steps{
+                
+                dir('app-code') {
+                     git url: "https://github.com/Aniket-d-d/TWSThreeTierAppChallenge.git", branch: "ak-automate" //clone-the app-code
+                     sh "cd TWSThreeTierAppChallenge"
+                     sh "./update_variables.sh"
+                }
+            }
+        }
+        
+		stage('Build Images'){
+            steps{
+			
+			     dir('app-code') {
+			     sh "cd TWSThreeTierAppChallenge/frontend"
+				 sh "docker build -t three-tier-frontend:latest"
+				 echo "Frontend Image Built Successfully"
+				 sh "cd .."
+				 sh "cd TWSThreeTierAppChallenge/backend"
+				 sh "docker build -t three-tier-backend:latest"
+				 echo "Backend Image Built Successfully"
+				}
+            }
+            
+        }
+		
+		stage('Push Images'){
+		    environment {
+                AWS_CREDS = credentials('aws-cli-cred')   //docker-credentials
+            }
+            steps{
+                 
+                 sh "aws ecr-public get-login-password --region us-west-2 | docker login --username AWS --password-stdin public.ecr.aws/ALIAS_INFO"
+				 sh "docker tag three-tier-frontend:latest public.ecr.aws/ALIAS_INFO/three-tier-frontend:latest"
+				 sh "docker push public.ecr.aws/ALIAS_INFO/three-tier-frontend:latest"
+				 echo "Frontend Image Pushed Successfully"
+				 
+				 sh "aws ecr-public get-login-password --region us-west-2 | docker login --username AWS --password-stdin public.ecr.aws/ALIAS_INFO"
+				 sh "docker tag three-tier-backend:latest public.ecr.aws/ALIAS_INFO/three-tier-backend:latest"
+				 sh "docker push public.ecr.aws/ALIAS_INFO/three-tier-backend:latest"
+				 echo "Backend Image Pushed Successfully"
+        }
+        
+    }
+}

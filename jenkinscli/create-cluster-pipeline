@@ -1,0 +1,18 @@
+pipeline{
+    agent any //defining agent
+
+    stages{
+        stage('Creates Cluster'){
+            environment {
+                AWS_CREDS = credentials('aws-cli-cred')   //docker-credentials
+            }
+            steps{
+			     sh "eksctl create cluster --name three-tier-cluster --region us-west-2 --node-type t2.medium --nodes-min 2 --nodes-max 2"
+				 sh "aws eks update-kubeconfig --region us-west-2 --name three-tier-cluster"
+				 sh "kubectl get nodes"
+            }
+            
+        }
+        
+    }
+}
