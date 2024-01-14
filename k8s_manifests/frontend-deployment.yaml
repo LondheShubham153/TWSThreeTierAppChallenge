@@ -27,7 +27,7 @@ spec:
         imagePullPolicy: Always
         env:
           - name: REACT_APP_BACKEND_URL
-            value: "http://app.trainwithshubham.com/api/tasks" 
+            value: "http://k8s-workshop-mainlb-4400de9971-2141729393.ap-south-1.elb.amazonaws.com/api/tasks" 
         ports:
         - containerPort: 3000
        
