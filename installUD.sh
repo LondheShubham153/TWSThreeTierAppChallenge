@@ -6,6 +6,7 @@ apt-get update
 apt-get update
 apt install docker.io -y
 usermod -aG docker ubuntu
+sudo chown ubuntu /var/run/docker.sock
 systemctl restart docker
 
 #install Java for Jenkins
