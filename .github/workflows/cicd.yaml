@@ -69,9 +69,4 @@ jobs:
         kubectl apply -f k8s_manifests/backend_config/backend-deployment.yaml -f k8s_manifests/backend_config/backend-service.yaml
         kubectl apply -f k8s_manifests/frontend_config/frontend-deployment.yaml -f k8s_manifests/frontend_config/frontend-service.yaml
         kubectl apply -f k8s_manifests/mongo_config/secrets.yaml -f k8s_manifests/mongo_config/deploy.yaml -f k8s_manifests/mongo_config/service.yaml 
-
-      # Installing and Deploying Load Balancer 
-    - name: Installing ALB
-      run: |
-        ./alb_install.sh
         kubectl apply -f k8s_manifests/alb_config/full_stack_lb.yaml
