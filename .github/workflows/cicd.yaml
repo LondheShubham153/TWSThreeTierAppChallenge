@@ -61,12 +61,3 @@ jobs:
       # Updating kubeconfig
     - name: update kubeconfig
       run: aws eks update-kubeconfig --region ${{ env.AWS_EKS_CLUSTER_REGION }} --name ${{ env.AWS_EKS_CLUSTER_NAME }}
-
-      # Deploying Configs to EKS
-    - name: applying k8s configs
-      run: |
-        kubectl create namespace ${{ env.AWS_EKS_CLUSTER_NAMESPACE }}
-        kubectl apply -f k8s_manifests/backend_config/backend-deployment.yaml -f k8s_manifests/backend_config/backend-service.yaml
-        kubectl apply -f k8s_manifests/frontend_config/frontend-deployment.yaml -f k8s_manifests/frontend_config/frontend-service.yaml
-        kubectl apply -f k8s_manifests/mongo_config/secrets.yaml -f k8s_manifests/mongo_config/deploy.yaml -f k8s_manifests/mongo_config/service.yaml 
-        kubectl apply -f k8s_manifests/alb_config/full_stack_lb.yaml
