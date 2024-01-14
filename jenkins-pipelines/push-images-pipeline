@@ -37,12 +37,12 @@ pipeline{
             }
             steps{
                  
-                 sh "aws ecr-public get-login-password --region us-west-2 | docker login --username AWS --password-stdin public.ecr.aws/ALIAS_INFO"
+                 sh "aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/ALIAS_INFO"
 				 sh "docker tag three-tier-frontend:latest public.ecr.aws/ALIAS_INFO/three-tier-frontend:latest"
 				 sh "docker push public.ecr.aws/ALIAS_INFO/three-tier-frontend:latest"
 				 echo "Frontend Image Pushed Successfully"
 				 
-				 sh "aws ecr-public get-login-password --region us-west-2 | docker login --username AWS --password-stdin public.ecr.aws/ALIAS_INFO"
+				 sh "aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/ALIAS_INFO"
 				 sh "docker tag three-tier-backend:latest public.ecr.aws/ALIAS_INFO/three-tier-backend:latest"
 				 sh "docker push public.ecr.aws/ALIAS_INFO/three-tier-backend:latest"
 				 echo "Backend Image Pushed Successfully"

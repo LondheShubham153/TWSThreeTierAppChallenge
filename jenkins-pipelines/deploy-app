@@ -18,8 +18,7 @@ pipeline{
                 MONGO_CRED = credentials('mongo-pass')
             }
             steps{
-                 dir('app-code') {
-                    sh "cd /TWSThreeTierAppChallenge/k8s_manifests/mongo"
+                 dir('app-code/k8s_manifests/mongo') {
                     sh '''
                     sed -i 's/USR_NAME/'"$MONGO_CRED_USR"'/g' secrets.yaml
                     sed -i 's/PASS/'"$MONGO_CRED_PSW"'/g' secrets.yaml
@@ -35,11 +34,11 @@ pipeline{
             }
             steps{
                  
-                 dir('app-code') {
-			     sh "cd TWSThreeTierAppChallenge/k8s_manifests"
-				 sh "cd mongo"
+                 dir('app-code/k8s_manifests/mongo') {
                  sh "kubectl apply -f ."
-                 sh "cd .."
+                 }
+
+                 dir('app-code//k8s_manifests'){
                  sh "kubectl apply -f backend-deployment.yaml backend-service.yaml frontend-deployment.yaml frontend-service.yaml "
 				}
             }
