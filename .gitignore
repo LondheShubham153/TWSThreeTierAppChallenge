@@ -1,2 +1,4 @@
 **/terraform/.terraform/*
 **/terraform/.terraform.lock.hcl
+
+**/k8s_manifest/backend/Readme.md

@@ -21,9 +21,11 @@ spec:
       labels:
         role: api
     spec:
+      imagePullSecrets:
+      - name: ecr-registry
       containers:
       - name: api
-        image: public.ecr.aws/w8u5e4v2/workshop-backend:v1
+        image: 807373741966.dkr.ecr.us-east-1.amazonaws.com/3tier_backend:latest
         imagePullPolicy: Always
         env:
           - name: MONGO_CONN_STR

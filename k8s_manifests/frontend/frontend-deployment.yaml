@@ -21,13 +21,14 @@ spec:
       labels:
         role: frontend
     spec:
+      imagePullSecrets:
+      - name: ecr-registry
       containers:
       - name: frontend
-        image: public.ecr.aws/e3i3d3z5/three-tier-frontend-d:latest
+        image: 807373741966.dkr.ecr.us-east-1.amazonaws.com/3tier_frontend:latest
         imagePullPolicy: Always
         env:
           - name: REACT_APP_BACKEND_URL
-            value: "http://app.trainwithshubham.com/api/tasks" 
+            value: "http://app.sahil-devops.xyz/api/tasks" 
         ports:
         - containerPort: 3000
-       

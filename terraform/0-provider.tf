@@ -22,7 +22,7 @@ terraform {
     }
   }
   backend "s3" {
-    bucket = "terraformstate0512"
+    bucket = "twschallenge-terraform"
     key    = "terraform.tfstate"
     region = "us-east-1"
 

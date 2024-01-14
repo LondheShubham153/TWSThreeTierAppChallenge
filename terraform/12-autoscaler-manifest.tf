@@ -23,6 +23,10 @@ metadata:
   annotations:
     eks.amazonaws.com/role-arn: aws_iam_role.autoscaling_role.arn
 EOF
+ depends_on = [
+    aws_eks_node_group.private_nodes,
+    aws_iam_role.autoscaling_role
+ ]
 }
 
 resource "kubectl_manifest" "role" {
@@ -44,6 +48,10 @@ rules:
     resourceNames: ["cluster-autoscaler-status", "cluster-autoscaler-priority-expander"]
     verbs: ["delete", "get", "update", "watch"]
 EOF
+depends_on = [
+    aws_eks_node_group.private_nodes,
+    aws_iam_role.autoscaling_role
+ ]
 }
 
 resource "kubectl_manifest" "role_binding" {
@@ -65,6 +73,10 @@ subjects:
     name: cluster-autoscaler
     namespace: kube-system
 EOF
+depends_on = [
+    aws_eks_node_group.private_nodes,
+    aws_iam_role.autoscaling_role
+ ]
 }
 
 resource "kubectl_manifest" "cluster_role" {
@@ -125,6 +137,10 @@ rules:
     resources: ["leases"]
     verbs: ["get", "update"]
 EOF
+depends_on = [
+    aws_eks_node_group.private_nodes,
+    aws_iam_role.autoscaling_role
+ ]
 }
 
 resource "kubectl_manifest" "cluster_role_binding" {
@@ -145,6 +161,10 @@ subjects:
     name: cluster-autoscaler
     namespace: kube-system
 EOF
+depends_on = [
+    aws_eks_node_group.private_nodes,
+    aws_iam_role.autoscaling_role
+ ]
 }
 
 resource "kubectl_manifest" "deployment" {
@@ -200,4 +220,8 @@ spec:
           hostPath:
             path: "/etc/ssl/certs/ca-bundle.crt"
 EOF
+depends_on = [
+    aws_eks_node_group.private_nodes,
+    aws_iam_role.autoscaling_role
+ ]
 }
