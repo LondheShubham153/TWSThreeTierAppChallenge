@@ -1,9 +1,8 @@
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  namespace: workshop  # Update the namespace if needed
   name: jenkins-pv-role
 rules:
 - apiGroups: [""]
-  resources: ["persistentvolumes"]
+  resources: ["persistentvolumes", "storageclasses"]
   verbs: ["get", "list", "watch", "create", "update"]
