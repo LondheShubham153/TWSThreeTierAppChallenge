@@ -1,10 +1,11 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   namespace: workshop
   name: mongodb
 spec:
-  replicas: 1
+  serviceName: mongodb-svc
+  replicas: 2
   selector:
     matchLabels:
       app: mongodb
@@ -44,10 +45,17 @@ spec:
               secretKeyRef:
                 name: mongo-sec
                 key: password
-      #   volumeMounts:
-      #     - name: mongo-volume
-      #       mountPath: /data/db
-      # volumes:
-      # - name: mongo-volume
-      #   persistentVolumeClaim:
-      #     claimName: mongo-volume-claim
+        volumeMounts:
+          - name: mongo-volume
+            mountPath: /data/db
+  volumeClaimTemplates:
+    - metadata:
+        name: mongo-volume
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: ebs-sc  
+     
+  
