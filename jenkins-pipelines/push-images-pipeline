@@ -17,11 +17,13 @@ pipeline{
 		stage('Build Images'){
             steps{
 			
-			     dir('app-code') {
-				 sh "docker build -f frontend/Dockerfile -t three-tier-frontend:latest ."
+			     dir('app-code/frontend') {
+				 sh "docker build -t three-tier-frontend:latest ."
 				 echo "Frontend Image Built Successfully"
+				}
 
-				 sh "docker build -f backend/Dockerfile -t three-tier-backend:latest ."
+				 dir('app-code/backend') {
+				 sh "docker build -t three-tier-backend:latest ."
 				 echo "Backend Image Built Successfully"
 				}
             }
