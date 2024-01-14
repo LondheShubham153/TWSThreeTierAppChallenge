@@ -8,8 +8,8 @@ pipeline{
                 
                 dir('app-code') {
                      git url: "https://github.com/Aniket-d-d/TWSThreeTierAppChallenge.git", branch: "ak-automate" //clone-the app-code
-                     sh "cd TWSThreeTierAppChallenge"
-                     sh "./update_variables.sh"
+                     sh "chomod +x update_variables.sh"
+                     sh "sudo ./update_variables.sh"
                 }
             }
         }
@@ -18,11 +18,11 @@ pipeline{
             steps{
 			
 			     dir('app-code') {
-			     sh "cd TWSThreeTierAppChallenge/frontend"
+			     sh "cd /frontend"
 				 sh "docker build -t three-tier-frontend:latest"
 				 echo "Frontend Image Built Successfully"
 				 sh "cd .."
-				 sh "cd TWSThreeTierAppChallenge/backend"
+				 sh "cd /backend"
 				 sh "docker build -t three-tier-backend:latest"
 				 echo "Backend Image Built Successfully"
 				}
@@ -31,6 +31,7 @@ pipeline{
         }
 		
 		stage('Push Images'){
+
 		    environment {
                 AWS_CREDS = credentials('aws-cli-cred')   //docker-credentials
             }
@@ -47,5 +48,6 @@ pipeline{
 				 echo "Backend Image Pushed Successfully"
         }
         
-    }
+   	 }
+	}
 }
