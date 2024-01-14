@@ -7,16 +7,16 @@ script_dir=$(dirname "$0")
 source "${script_dir}/variables"
 
 # Define the target file
-backend_deployment_file="/k8s_manifests/backend-deployment.yaml"
+backend_deployment_file="${script_dir}/k8s_manifests/backend-deployment.yaml"
 # Use sed to replace text in the target file
 sed -i "s/ALIAS_INFO/$ALIAS_INFO/g" "$backend_deployment_file"
 
-frontend_deployment_file="/k8s_manifests/frontend-deployment.yaml"
+frontend_deployment_file="${script_dir}/k8s_manifests/frontend-deployment.yaml"
 # Use sed to replace text in the target file
 sed -i "s/ALIAS_INFO/$ALIAS_INFO/g" "$frontend_deployment_file"
 sed -i "s/DOMAIN/$DOMAIN/g" "$frontend_deployment_file"
 
-full_stack_file="/k8s_manifests/full_stack_lb.yaml"
+full_stack_file="${script_dir}/k8s_manifests/full_stack_lb.yaml"
 # Use sed to replace text in the target file
 sed -i "s/DOMAIN/$DOMAIN/g" "$full_stack_file"
 
