@@ -83,6 +83,24 @@ pipeline{
                  sh "helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=three-tier-cluster --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller"
                  sh "kubectl get deployment -n kube-system aws-load-balancer-controller"
 				}
+            }
+        }
+
+        stage('Delay Stage') {
+            steps {
+                script {
+                    // Introduce a delay of 1 minute (you can adjust the time as needed)
+                    sleep time: 60, unit: 'SECONDS'
+                }
+            }
+        }
+
+        stage('deploy-ingress'){
+		    environment {
+                AWS_CREDS = credentials('aws-cli-cred')   //docker-credentials
+            }
+            steps{
+                 
                 dir('app-code/k8s_manifests'){
                  sh "kubectl apply -f full_stack_lb.yaml"
                  sh "kubectl get ing -n workshop"
