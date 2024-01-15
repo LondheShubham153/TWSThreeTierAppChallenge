@@ -53,17 +53,6 @@ pipeline {
           }
         }
 
-    //     stage('Update Manifest') {
-    //       steps {
-    //         script {
-    //         // echo "sed command: sed -i 's/{frontend_registry}\\\\:${BUILD_NUMBER}/807373741966.dkr.ecr.us-east-1.amazonaws.com\\/3tier_frontend:\\\$(echo \$BUILD_NUMBER | tr A-Z a-z)/g'"
-    //           println "sed command: sed -i 's/{frontend_registry}\\\\:${BUILD_NUMBER}/807373741966.dkr.ecr.us-east-1.amazonaws.com\\/3tier_frontend:\\\$(echo \${BUILD_NUMBER} | tr A-Z a-z)/g'"
-    //         //  sh "sed -i 's/{frontend_registry}\\\\:${BUILD_NUMBER}/807373741966.dkr.ecr.us-east-1.amazonaws.com\\/3tier_frontend:\\\$(echo \$BUILD_NUMBER | tr A-Z a-z)/g' k8s_manifests/frontend/frontend-deployment.yaml"
-    //         //  sh "sed -i 's/{backend_registry}\\\\:${BUILD_NUMBER}/807373741966.dkr.ecr.us-east-1.amazonaws.com\\/3tier_backend:\\\$(echo \$BUILD_NUMBER | tr A-Z a-z)/g' k8s_manifests/backend/backend-deployment.yaml"
-    //     }
-    //   }
-    // }
-
         stage('Deploy to EKS Cluster') {
             steps {
                 withKubeConfig(caCertificate: '', clusterName: 'demo', contextName: '', credentialsId: 'k8s-token', namespace: 'workshop', restrictKubeConfigAccess: false, serverUrl: 'https://77ECB14AE268693EC968CA3A5341FD14.gr7.us-east-1.eks.amazonaws.com') {
