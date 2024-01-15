@@ -81,5 +81,9 @@ Note: These pipelines will create the cluster, push the images to the container 
 - Voila You will be ale to access the application.
 ![final app](https://github.com/Aniket-d-d/TWSThreeTierAppChallenge/assets/57555096/ef4400fe-2922-4c1e-8237-e83bb58cffc7)
 
-###Contribution
+### Contribution
 Contributions are welcome! If you encounter any issues or have suggestions for improvements, please open an issue or create a pull request.
+
+### Note:
+- I have used sed commands and shell scripts to update the piplines according to the variables described in variables file above. 
+- Please reach out for any clarifications about pipelines in this challenge.
