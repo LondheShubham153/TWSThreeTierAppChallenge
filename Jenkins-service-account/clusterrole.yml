@@ -4,5 +4,5 @@ metadata:
   name: jenkins-pv-role
 rules:
 - apiGroups: [""]
-  resources: ["persistentvolumes", "storageclasses"]
+  resources: ["storageclasses"]
   verbs: ["get", "list", "watch", "create", "update"]
