@@ -57,6 +57,7 @@ pipeline{
                  sh "eksctl utils associate-iam-oidc-provider --region=us-west-2 --cluster=three-tier-cluster --approve"
                  }
                  dir('app-code/jenkins-pipeline'){
+                 sh "chmod +x deploy-app.sh"
                  sh "./deploy-app.sh"
 				}
             }

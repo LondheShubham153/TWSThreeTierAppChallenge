@@ -39,6 +39,7 @@ pipeline{
 				 sh "./update_variables.sh"
 				 }
 				 dir('app-code/jenkins-pipelines'){
+				 sh "chmod +x push-images-pipeline.sh"
 				 sh "./push-images-pipeline.sh"	
                  
 			}
