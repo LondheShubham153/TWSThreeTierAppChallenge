@@ -69,7 +69,7 @@ pipeline {
 	                sh 'kubectl apply -f k8s_manifests/mongo/'
                   sh 'kubectl apply -f k8s_manifests/backend/'
                   sh 'kubectl apply -f k8s_manifests/frontend/'
-                  sh 'kubectl apply -f full_stack_lb.yaml'
+                  sh 'kubectl apply -f k8s_manifests/full_stack_lb.yaml'
 		            }
             }
         }
