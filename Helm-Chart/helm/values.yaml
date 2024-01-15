@@ -1,0 +1,26 @@
+frontend:
+  image:
+    repository: public.ecr.aws/y0r2f7i2/frontend
+    tag: latest  
+    pullPolicy: Always  
+
+backend:
+  image:
+    repository: public.ecr.aws/y0r2f7i2/backend
+    tag: latest  
+    pullPolicy: Always
+
+mongo:
+  image:
+    repository: public.ecr.aws/y0r2f7i2/mongo
+    tag: latest  
+    pullPolicy: Always
+
+
+frontends: {}
+
+api: {}
+
+mongodb: {}
+
+

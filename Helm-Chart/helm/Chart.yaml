@@ -1,0 +1,15 @@
+apiVersion: v2
+name: three-tier-architecture-demo   # Replace with a descriptive name
+version: 0.1.0
+home: https://github.com/anishbista60/TWSThreeTierAppChallenge  # Replace with your repo URL
+
+description: Deploying three-tier application with frontend, backend and Mongodb
+
+type: application
+
+keywords:
+  - frontend
+  - backend
+  - mongodb
+
+
