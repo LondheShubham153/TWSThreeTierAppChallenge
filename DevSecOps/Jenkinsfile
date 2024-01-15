@@ -94,8 +94,26 @@ pipeline {
                         sh 'kubectl apply -f full_stack_lb.yaml'
                   }
                 }
+              }
+            }
+          }
+        }
+        post{
+            always{
+                emailext(
+                    subject: "Build ${BUILD_STATUS} - ${BUILD_NUMBER}",
+                    body: '''<html>
+                                <body>
+                                    <li>Build status: ${BUILD_STATUS}</li>
+                                    <li>Build Logs: ${BUILD_URL}</li>
+                                </body>
+                             </html>''',
+                    to: 'bisen.neha21@gmail.com',
+                    from: 'bisen.neha21@gmail.com',
+                    replyTo: 'bisen.neha21@gmail.com',
+                    mimeType: 'text/html'
+                        
+                )
             }
         }
-    }
-}
 }
