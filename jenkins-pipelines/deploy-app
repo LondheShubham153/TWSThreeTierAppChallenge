@@ -80,9 +80,11 @@ pipeline{
                  sh "helm repo update eks"
                  sh "helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=three-tier-cluster --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller"
                  sh "kubectl get deployment -n kube-system aws-load-balancer-controller"
+				}
+                dir('app-code/k8s_manifests'){
                  sh "kubectl apply -f full_stack_lb.yaml"
                  sh "kubectl get ing -n workshop"
-				}
+                }
             }
         }
         
