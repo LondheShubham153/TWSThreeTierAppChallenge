@@ -33,4 +33,5 @@ rules:
     - secrets
     - services
     - ingress
+    - namespaces
   verbs: ["get", "watch", "list", "create", "update", "patch"]
