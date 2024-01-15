@@ -27,6 +27,6 @@ spec:
         imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
         env:
           - name: REACT_APP_BACKEND_URL
-            value: "http://<your-domain-name>/api/tasks"
+            value: "http://api:8080/api/tasks"
         ports:
         - containerPort: 3000

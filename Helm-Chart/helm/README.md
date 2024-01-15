@@ -1,9 +1,14 @@
-### Before deploying your chart configure your domain name in frontend-deployment.yaml
+### Before deploying your chart configure your domain name in frontend-deployment.yaml and ingress.yaml
 
 ```
  env:
     - name: REACT_APP_BACKEND_URL
       value: "http://<your-domain-name>/api/tasks"
+```
+```
+  ingressClassName: alb
+  rules:
+    - host: <your-domain-name>
 ```
 
 ### Create the namespace 
