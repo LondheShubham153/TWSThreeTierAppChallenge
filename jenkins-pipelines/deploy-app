@@ -59,7 +59,7 @@ pipeline{
                  dir('alb-code') {
                  
 			     sh "curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json"
-                 sh "aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam_policy.json"
+                 sh "aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy${BUILD_NUMBER} --policy-document file://iam_policy.json"
                  sh "eksctl utils associate-iam-oidc-provider --region=us-west-2 --cluster=three-tier-cluster --approve"
                  }
                  dir('app-code/jenkins-pipeline'){
