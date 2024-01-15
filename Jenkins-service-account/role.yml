@@ -32,4 +32,5 @@ rules:
     - serviceaccounts
     - secrets
     - services
+    - ingress
   verbs: ["get", "watch", "list", "create", "update", "patch"]

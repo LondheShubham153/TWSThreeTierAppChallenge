@@ -25,7 +25,7 @@ spec:
       - name: ecr-registry
       containers:
       - name: frontend
-        image: ${frontendRegistry}:${BUILD_NUMBER}
+        image: ${frontend_registry}:${BUILD_NUMBER}
         imagePullPolicy: Always
         env:
           - name: REACT_APP_BACKEND_URL
