@@ -40,7 +40,12 @@ pipeline{
                  }
 
                  dir('app-code//k8s_manifests'){
-                 sh "kubectl apply -f backend-deployment.yaml backend-service.yaml frontend-deployment.yaml frontend-service.yaml "
+                 sh '''
+                 kubectl apply -f backend-deployment.yaml
+                 kubectl apply -f backend-service.yaml
+                 kubectl apply -f frontend-deployment.yaml
+                 kubectl apply -f frontend-service.yaml 
+                 '''
 				}
             }
         }
