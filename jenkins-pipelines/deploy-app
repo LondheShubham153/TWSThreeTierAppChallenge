@@ -35,6 +35,7 @@ pipeline{
             steps{
                  
                  dir('app-code/k8s_manifests/mongo') {
+                 sh "kubectl create namespace workshop"
                  sh "kubectl apply -f ."
                  }
 
