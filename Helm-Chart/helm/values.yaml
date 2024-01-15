@@ -1,18 +1,18 @@
 frontend:
   image:
-    repository: public.ecr.aws/y0r2f7i2/frontend
+    repository: public.ecr.aws/y0r2f7i2/frontend  #<your-public-frontend-repo-url>
     tag: latest  
     pullPolicy: Always  
 
 backend:
   image:
-    repository: public.ecr.aws/y0r2f7i2/backend
+    repository: public.ecr.aws/y0r2f7i2/backend  #<your-public-backend-repo-url>
     tag: latest  
     pullPolicy: Always
 
 mongo:
   image:
-    repository: public.ecr.aws/y0r2f7i2/mongo
+    repository: public.ecr.aws/y0r2f7i2/mongo #<your-public-mongo-repo-url>
     tag: latest  
     pullPolicy: Always
 
