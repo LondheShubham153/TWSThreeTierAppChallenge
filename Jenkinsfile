@@ -53,6 +53,15 @@ pipeline {
           }
         }
 
+        stage('Update Manifest') {
+          steps {
+            script {
+              sh "sed -i 's/<span class="math-inline">\{frontendRegistry\}\:</span>{BUILD_NUMBER}/807373741966.dkr.ecr.us-east-1.amazonaws.com/3tier_frontend:$BUILD_NUMBER/g' k8s_manifests/frontend/deployment.yaml"
+              sh "sed -i 's/<span class="math-inline">\{backendRegistry\}\:</span>{BUILD_NUMBER}/807373741966.dkr.ecr.us-east-1.amazonaws.com/3tier_backend:$BUILD_NUMBER/g' k8s_manifests/backend/backend-deployment.yaml"
+        }
+    }
+}
+
         stage('Deploy to EKS Cluster') {
             steps {
                 withKubeConfig(caCertificate: '', clusterName: 'demo', contextName: '', credentialsId: 'k8s-token', namespace: 'workshop', restrictKubeConfigAccess: false, serverUrl: 'https://77ECB14AE268693EC968CA3A5341FD14.gr7.us-east-1.eks.amazonaws.com') {
@@ -60,6 +69,7 @@ pipeline {
 	                sh 'kubectl apply -f k8s_manifests/mongo/'
                   sh 'kubectl apply -f k8s_manifests/backend/'
                   sh 'kubectl apply -f k8s_manifests/frontend/'
+                  sh 'kubectl apply -f full_stack_lb.yaml'
 		            }
             }
         }
