@@ -62,7 +62,7 @@ pipeline{
                  sh "aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy${BUILD_NUMBER} --policy-document file://iam_policy.json"
                  sh "eksctl utils associate-iam-oidc-provider --region=us-west-2 --cluster=three-tier-cluster --approve"
                  }
-                 dir('app-code/jenkins-pipeline'){
+                 dir('app-code/jenkins-pipelines'){
                  sh "chmod +x deploy-app.sh"
                  sh "./deploy-app.sh"
 				}
