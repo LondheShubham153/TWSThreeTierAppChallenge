@@ -45,3 +45,6 @@ mv /tmp/eksctl /usr/local/bin
 
 #permit ubutu accesss for jenkins
 usermod -a -G ubuntu jenkins
+
+#install helm
+snap install helm --classic
