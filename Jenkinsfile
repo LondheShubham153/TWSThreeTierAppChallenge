@@ -4,9 +4,9 @@ pipeline {
     
     environment {
         registryCredential = 'ecr:us-east-1:awscreds'
-        backendRegistry = '807373741966.dkr.ecr.us-east-1.amazonaws.com/3tier_backend'
-        frontendRegistry = '807373741966.dkr.ecr.us-east-1.amazonaws.com/3tier_frontend'
-        ecr_Registry = 'https://807373741966.dkr.ecr.us-east-1.amazonaws.com'
+        backend_registry = '807373741966.dkr.ecr.us-east-1.amazonaws.com/3tier_backend'
+        frontend_registry = '807373741966.dkr.ecr.us-east-1.amazonaws.com/3tier_frontend'
+        ecr_registry = 'https://807373741966.dkr.ecr.us-east-1.amazonaws.com'
     }
 	
     stages{
@@ -14,7 +14,7 @@ pipeline {
         stage ('Build Backend Image') {
 		      steps {
 			      script {
-                dockerImageBackend = docker.build( backendRegistry + ":$BUILD_NUMBER", "./backend/")
+                dockerImageBackend = docker.build( backend_registry + ":$BUILD_NUMBER", "./backend/")
               }
             }
         }
@@ -22,7 +22,7 @@ pipeline {
         stage('Upload Backend Image') {
           steps{
             script {
-              docker. withRegistry( ecr_Registry, registryCredential ) {
+              docker. withRegistry( ecr_registry, registryCredential ) {
                 dockerImageBackend.push("$BUILD_NUMBER")
               }
             }
@@ -32,7 +32,7 @@ pipeline {
         stage ('Build Frontend Image') {
 		      steps {
 			      script {
-                dockerImageFrontend = docker.build( frontendRegistry + ":$BUILD_NUMBER", "./frontend/")
+                dockerImageFrontend = docker.build( frontend_registry + ":$BUILD_NUMBER", "./frontend/")
               }
             }
         }
@@ -40,7 +40,7 @@ pipeline {
         stage('Upload Frontend Image') {
           steps{
             script {
-              docker. withRegistry( ecr_Registry, registryCredential ) {
+              docker. withRegistry( ecr_registry, registryCredential ) {
                 dockerImageFrontend.push("$BUILD_NUMBER")
               }
             }
@@ -56,8 +56,8 @@ pipeline {
         stage('Update Manifest') {
           steps {
             script {
-              sh "sed -i 's/{frontendRegistry}\\\\:${BUILD_NUMBER}/807373741966.dkr.ecr.us-east-1.amazonaws.com\\/3tier_frontend:\\\$BUILD_NUMBER/g' k8s_manifests/frontend/frontend-deployment.yaml"
-              sh "sed -i 's/{backendRegistry}\\\\:${BUILD_NUMBER}/807373741966.dkr.ecr.us-east-1.amazonaws.com\\/3tier_backend:\\\$BUILD_NUMBER/g' k8s_manifests/backend/backend-deployment.yaml"
+              sh "sed -i 's/{frontend_registry}\\\\:${BUILD_NUMBER}/807373741966.dkr.ecr.us-east-1.amazonaws.com\\/3tier_frontend:\\\$(echo \$BUILD_NUMBER | tr A-Z a-z)/g' k8s_manifests/frontend/frontend-deployment.yaml"
+              sh "sed -i 's/{backend_registry}\\\\:${BUILD_NUMBER}/807373741966.dkr.ecr.us-east-1.amazonaws.com\\/3tier_backend:\\\$(echo \$BUILD_NUMBER | tr A-Z a-z)/g' k8s_manifests/backend/backend-deployment.yaml"
         }
     }
 }
