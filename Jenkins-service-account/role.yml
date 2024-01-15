@@ -24,6 +24,7 @@ rules:
     - ingress
     - jobs
     - limitranges
+    - storageclasses
     - persistentvolumeclaims
     - resourcequotas
     - replicasets

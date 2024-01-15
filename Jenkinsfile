@@ -55,7 +55,7 @@ pipeline {
 
         stage('Deploy to EKS Cluster') {
             steps {
-                withKubeConfig(caCertificate: '', clusterName: 'demo', contextName: '', credentialsId: 'k8s-token', namespace: 'workshop', restrictKubeConfigAccess: false, serverUrl: 'https://925DDA43F038104D630C448555042563.gr7.us-east-1.eks.amazonaws.com') {
+                withKubeConfig(caCertificate: '', clusterName: 'demo', contextName: '', credentialsId: 'k8s-token', namespace: 'workshop', restrictKubeConfigAccess: false, serverUrl: 'https://77ECB14AE268693EC968CA3A5341FD14.gr7.us-east-1.eks.amazonaws.com') {
     			      echo 'deploying to eks-cluster...'
 	                sh 'kubectl apply -f k8s_manifests/mongo/'
                   sh 'kubectl apply -f k8s_manifests/backend/'
