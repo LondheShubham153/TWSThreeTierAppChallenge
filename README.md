@@ -3,6 +3,7 @@
 ## Overview
 
 This project deploys a three-tier application on Kubernetes using Jenkins Pipeline. The architecture consists of a React-based frontend, a Node.js-based logic (middle) tier, and a MongoDB database.
+This projet is successfully designed and implemented with a robust 3-pipeline system to automate key processes for deploying a Kubernetes cluster, managing ECR image workflows, and orchestrating the deployment of an Amazon Load Balancer with an Ingress Controller. 
 
 ## Application Structure
 
