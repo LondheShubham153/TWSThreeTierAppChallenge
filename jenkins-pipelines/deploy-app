@@ -35,7 +35,7 @@ pipeline{
             steps{
                  
                  dir('app-code/k8s_manifests/mongo') {
-                 sh "kubectl create namespace workshop"
+                 sh "kubectl create namespace workshop --dry-run=client -o yaml | kubectl apply -f -"
                  sh "kubectl apply -f ."
                  }
 
