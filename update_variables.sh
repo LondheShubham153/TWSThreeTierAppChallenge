@@ -21,11 +21,11 @@ full_stack_file="${script_dir}/k8s_manifests/full_stack_lb.yaml"
 sed -i "s/DOMAIN/$DOMAIN/g" "$full_stack_file"
 
 
-deploy_app_pipeline_file="${script_dir}/jenkins-pipelines/deploy-app"
+deploy_app_pipeline_file="${script_dir}/jenkins-pipelines/deploy-app.sh"
 # Use sed to replace text in the target file
-sed -i "s/ACCOUNT_ID/$ACCOUNT_ID/g" "$full_stack_file"
+sed -i "s/ACCOUNT_ID/$ACCOUNT_ID/g" "$deploy_app_pipeline_file"
 
 
-push_images_pipeline_file="${script_dir}/jenkins-pipelines/push-images-pipeline"
+push_images_pipeline_file="${script_dir}/jenkins-pipelines/push-images-pipeline.sh"
 # Use sed to replace text in the target file
 sed -i "s/ALIAS_INFO/$ALIAS_INFO/g" "$push_images_pipeline_file"
