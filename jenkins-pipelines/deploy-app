@@ -102,6 +102,7 @@ pipeline{
             steps{
                  
                 dir('app-code/k8s_manifests'){
+                 sh "kubectl get deployment -n kube-system aws-load-balancer-controller"
                  sh "kubectl apply -f full_stack_lb.yaml"
                  sh "kubectl get ing -n workshop"
                 }
