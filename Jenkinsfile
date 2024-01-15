@@ -56,12 +56,18 @@ pipeline {
         stage('Deploy to EKS Cluster') {
             steps {
                 withKubeConfig(caCertificate: '', clusterName: 'demo', contextName: '', credentialsId: 'k8s-token', namespace: 'workshop', restrictKubeConfigAccess: false, serverUrl: 'https://77ECB14AE268693EC968CA3A5341FD14.gr7.us-east-1.eks.amazonaws.com') {
-    			      echo 'deploying to eks-cluster...'
+    			      echo 'deploying MongoDB StatefulSet with PVs,PVCs...'
 	                sh 'kubectl apply -f k8s_manifests/mongo/'
+
+                echo 'deploying Backend Deployment and Service...'
                   sh 'envsubst < k8s_manifests/backend/backend-deployment.yaml | kubectl apply -f -'
                   sh 'kubectl apply -f k8s_manifests/backend/backend-service.yaml'
+
+                echo 'deploying Frontend Deployment and Service...'
                   sh 'envsubst < k8s_manifests/frontend/frontend-deployment.yaml | kubectl apply -f -'
                   sh 'kubectl apply -f k8s_manifests/frontend/frontend-service.yaml'
+
+                echo 'deploying Ingress...'
                   sh 'kubectl apply -f k8s_manifests/full_stack_lb.yaml'
 		            }
             }
