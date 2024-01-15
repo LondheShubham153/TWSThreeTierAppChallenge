@@ -73,7 +73,7 @@ pipeline {
                   sh 'kubectl apply -f k8s_manifests/backend/backend-service.yaml'
                   sh 'envsubst < k8s_manifests/frontend/frontend-deployment.yaml | kubectl apply -f -'
                   sh 'kubectl apply -f k8s_manifests/frontend/frontend-service.yaml'
-                  // sh 'kubectl apply -f k8s_manifests/full_stack_lb.yaml'
+                  sh 'kubectl apply -f k8s_manifests/full_stack_lb.yaml'
 		            }
             }
         }

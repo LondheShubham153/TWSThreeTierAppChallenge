@@ -12,6 +12,7 @@ rules:
     - extensions
     - policy
     - rbac.authorization.k8s.io
+    - networking.k8s.io
   resources: 
     - pods
     - componentstatuses
@@ -32,6 +33,6 @@ rules:
     - serviceaccounts
     - secrets
     - services
-    - ingress
+    - ingresses
     - namespaces
   verbs: ["get", "watch", "list", "create", "update", "patch"]
