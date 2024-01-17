@@ -128,7 +128,8 @@ In the context of AWS IAM, an OIDC provider enables you to use identities from a
 
         https://helm.sh/docs/intro/install/
 
-  ### Perform following configuration
+  ### Configure your domain name in frontend-deployment.yaml and ingress.yaml
+  
   templates/frontend-deployment.yaml
 
     env:
