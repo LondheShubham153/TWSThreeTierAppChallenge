@@ -1,8 +1,9 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: workshop
   name: mongodb
+  namespace: workshop
 spec:
   replicas: 1
   selector:
@@ -14,40 +15,52 @@ spec:
         app: mongodb
     spec:
       containers:
-      - name: mongodb
+      - command:
+        - numactl
+        - --interleave=all
+        - mongod
+        - --wiredTigerCacheSizeGB
+        - "0.1"
+        - --bind_ip
+        - 0.0.0.0
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: mongo-sec
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: mongo-sec
         image: mongo:4.4.6
-        command:
-            - "numactl"
-            - "--interleave=all"
-            - "mongod"
-            - "--wiredTigerCacheSizeGB"
-            - "0.1"
-            - "--bind_ip"
-            - "0.0.0.0"
+        name: mongodb
         ports:
         - containerPort: 27017
         resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
           limits:
-            memory: "1Gi"
-            cpu: "500m"
-        env:
-          - name: MONGO_INITDB_ROOT_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: mongo-sec
-                key: username
-          - name: MONGO_INITDB_ROOT_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: mongo-sec
-                key: password
-      #   volumeMounts:
-      #     - name: mongo-volume
-      #       mountPath: /data/db
-      # volumes:
-      # - name: mongo-volume
-      #   persistentVolumeClaim:
-      #     claimName: mongo-volume-claim
+            cpu: 500m
+            memory: 1Gi
+          requests:
+            cpu: 250m
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /data/db
+          name: mongodb-data
+      volumes:
+      - name: mongodb-data
+        persistentVolumeClaim:
+          claimName: mongodb-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-pvc
+  namespace: workshop
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
