@@ -3,13 +3,16 @@ resource "aws_instance" "my_instance" {
 
 
   ami                    = "ami-05fb0b8c1424f266b" # Specify the AMI ID for your desired Amazon Machine Image
-  instance_type          = "t2.micro"
+  instance_type          = "t2.large"
   key_name               = "admin-ajay" # Change this to your key pair name
   vpc_security_group_ids = [aws_security_group.terraform-instance-sg.id]
- // iam_instance_profile = iam_instance_profile.my-profile.name
+  // iam_instance_profile = iam_instance_profile.my-profile.name
 
- iam_instance_profile = aws_iam_instance_profile.example_profile.name
-
+  iam_instance_profile = aws_iam_instance_profile.example_profile.name
+  //for storage
+  root_block_device {
+    volume_size = 30
+  }
 
   tags = {
     Name = var.instance_names[count.index]
@@ -19,7 +22,7 @@ resource "aws_instance" "my_instance" {
 }
 
 output "jenkins_public_ip" {
-    value = [for instance in aws_instance.my_instance : instance.public_ip]
+  value = [for instance in aws_instance.my_instance : instance.public_ip]
 
 }
 /*
@@ -39,7 +42,7 @@ resource "aws_security_group" "terraform-instance-sg" {
   vpc_id      = "vpc-0a35a83de5d6649ab"
 
   ingress = [
-    for port in [22, 80, 443,8080] : {
+    for port in [22, 80, 443, 8080] : {
       description      = "inbound rules"
       from_port        = port
       to_port          = port
