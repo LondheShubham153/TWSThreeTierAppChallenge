@@ -54,21 +54,75 @@ sudo mv /tmp/eksctl /usr/local/bin
 eksctl version
 ```
 
-### Step 7: Setup EKS Cluster
+### Step 7: Install Helm Chart
+``` shell
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+helm version
+```
+
+### Step 8: Setup EKS Cluster
 ``` shell
 eksctl create cluster --name three-tier-cluster --region us-west-2 --node-type t2.medium --nodes-min 2 --nodes-max 2
 aws eks update-kubeconfig --region us-west-2 --name three-tier-cluster
 kubectl get nodes
 ```
 
-### Step 8: Run Manifests
+### Step 9: Add the Helm Stable Charts
+``` shell
+helm repo add stable https://charts.helm.sh/stable
+```
+
+### Step 10: Add Prometheus Helm repo and Install Prometheus
+``` shell
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm install stable prometheus-community/kube-prometheus-stack -n workshop
+```
+
+### Step 11: Edit service for Prometheus
+``` shell
+kubectl edit svc stable-kube-prometheus-sta-prometheus -n workshop
+```
+<img width="509" alt="Screenshot 2024-01-17 154212" src="https://github.com/iamamash/TWSThreeTierAppChallenge/assets/42666741/c0ed6acc-a95f-4823-b978-df31d8a1bf26">
+
+**Change it from ClusterIP to LoadBalancer after changing make sure to save the file**
+
+### Step 12: Edit service for Grafana
+``` shell
+kubectl edit svc stable-grafana -n workshop
+```
+<img width="838" alt="Screenshot 2024-01-17 154656" src="https://github.com/iamamash/TWSThreeTierAppChallenge/assets/42666741/55f3302e-2a4e-49bb-9444-0e40829e4a0b">
+
+**Change it from ClusterIP to LoadBalancer after changing make sure to save the file**
+
+### Step 13: Making Dashboard using Grafana
+``` shell
+kubectl get svc -n workshop
+```
+> - Use the LoadBalancer link and access the Grafana in the browser.
+> 
+> - Give username as "admin" and for password run the below command.
+>   ``` shell
+>   kubectl get secret --namespace workshop stable-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+>   ```
+>
+> - Click on create your first dashboard in Grafana.
+>
+> - click on import dashboard.
+>
+> - Give no "15760" or select prometheus from the Load field and click on Load button.
+>
+> - Then click on Import.
+
+### Step 14: Run Manifests
 ``` shell
 kubectl create namespace workshop
 kubectl apply -f .
 kubectl delete -f .
 ```
 
-### Step 9: Install AWS Load Balancer
+### Step 15: Install AWS Load Balancer
 ``` shell
 curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json
 aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam_policy.json
@@ -76,7 +130,7 @@ eksctl utils associate-iam-oidc-provider --region=us-west-2 --cluster=three-tier
 eksctl create iamserviceaccount --cluster=three-tier-cluster --namespace=kube-system --name=aws-load-balancer-controller --role-name AmazonEKSLoadBalancerControllerRole --attach-policy-arn=arn:aws:iam::626072240565:policy/AWSLoadBalancerControllerIAMPolicy --approve --region=us-west-2
 ```
 
-### Step 10: Deploy AWS Load Balancer Controller
+### Step 16: Deploy AWS Load Balancer Controller
 ``` shell
 sudo snap install helm --classic
 helm repo add eks https://aws.github.io/eks-charts
