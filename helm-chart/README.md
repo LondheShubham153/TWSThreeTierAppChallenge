@@ -148,8 +148,11 @@ In the context of AWS IAM, an OIDC provider enables you to use identities from a
 
 
   ### Deploy your helm chart 
+  <p>Move to helm-chart directory with cd helm-chart and execute the below command</p>
 
     helm install three-tier-architecture-demo  --namespace workshop .
+
+<p>Now, it deployed all the manfiest yaml file present in the templates directory. As, you already deployed the ingress controller and this controller automatically creates the application load balancer based on your ingress.yaml</p>
 
   ### Check if container is running or not 
       kubectl get all -n workshop 
