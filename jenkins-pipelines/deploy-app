@@ -1,0 +1,113 @@
+pipeline{
+    agent any //defining agent
+
+    stages{
+	
+	    stage('app-code'){
+            steps{
+                
+                dir('app-code') {
+                     git url: "https://github.com/Aniket-d-d/TWSThreeTierAppChallenge.git", branch: "ak-automate" //clone-the app-code
+                     sh "chmod +x update_variables.sh"
+				     sh "./update_variables.sh"
+                }
+            }
+        }
+    
+		stage('update-files'){
+		    environment {
+                AWS_CREDS = credentials('aws-cli-cred')   //docker-credentials
+                MONGO_CRED = credentials('mongo-pass')
+            }
+            steps{
+                 dir('app-code/k8s_manifests/mongo') {
+                    sh '''
+                    sed -i 's/USR_NAME/'"$MONGO_CRED_USR"'/g' secrets.yaml
+                    sed -i 's/PASS/'"$MONGO_CRED_PSW"'/g' secrets.yaml
+                    '''
+				}
+            }
+        }
+
+
+		stage('deploy-app'){
+		    environment {
+                AWS_CREDS = credentials('aws-cli-cred')   //docker-credentials
+            }
+            steps{
+                 
+                 dir('app-code/k8s_manifests/mongo') {
+                 sh "kubectl create namespace workshop --dry-run=client -o yaml | kubectl apply -f -"
+                 sh "kubectl apply -f ."
+                 }
+
+                 dir('app-code//k8s_manifests'){
+                 sh '''
+                 kubectl apply -f backend-deployment.yaml
+                 kubectl apply -f backend-service.yaml
+                 kubectl apply -f frontend-deployment.yaml
+                 kubectl apply -f frontend-service.yaml 
+                 '''
+				}
+            }
+        }
+
+        stage('install-alb'){
+		    environment {
+                AWS_CREDS = credentials('aws-cli-cred')   //docker-credentials
+            }
+            steps{
+                 
+                 dir('alb-code') {
+                 
+			     sh "curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json"
+                 sh "aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy${BUILD_NUMBER} --policy-document file://iam_policy.json"
+                 sh "eksctl utils associate-iam-oidc-provider --region=us-west-2 --cluster=three-tier-cluster --approve"
+                 }
+                 dir('app-code/jenkins-pipelines'){
+                 sh "chmod +x deploy-app.sh"
+                 sh "./deploy-app.sh"
+				}
+            }
+        }
+
+        stage('deploy-alb'){
+		    environment {
+                AWS_CREDS = credentials('aws-cli-cred')   //docker-credentials
+            }
+            steps{
+                 
+                 dir('app-code') {
+                 sh "helm repo add eks https://aws.github.io/eks-charts"
+                 sh "helm repo update eks"
+                 sh "helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=three-tier-cluster --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller"
+                 sh "kubectl get deployment -n kube-system aws-load-balancer-controller"
+				}
+            }
+        }
+
+        stage('Delay Stage') {
+            steps {
+                script {
+                    // Introduce a delay of 1 minute (you can adjust the time as needed)
+                    sleep time: 60, unit: 'SECONDS'
+                }
+            }
+        }
+
+        stage('deploy-ingress'){
+		    environment {
+                AWS_CREDS = credentials('aws-cli-cred')   //docker-credentials
+            }
+            steps{
+                 
+                dir('app-code/k8s_manifests'){
+                 sh "kubectl get deployment -n kube-system aws-load-balancer-controller"
+                 sh "kubectl apply -f full_stack_lb.yaml"
+                 sh "kubectl get ing -n workshop"
+                }
+            }
+        }
+        
+    }
+}

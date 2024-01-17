@@ -1,109 +1,91 @@
-# #TWSThreeTierAppChallenge
+# Three-Tier Application on Kubernetes
 
 ## Overview
-This repository hosts the `#TWSThreeTierAppChallenge` for the TWS community. 
-The challenge involves deploying a Three-Tier Web Application using ReactJS, NodeJS, and MongoDB, with deployment on AWS EKS. Participants are encouraged to deploy the application, add creative enhancements, and submit a Pull Request (PR). Merged PRs will earn exciting prizes!
 
-**Get The Challenge here**
+This project deploys a three-tier application on Kubernetes using Jenkins Pipeline. The architecture consists of a React-based frontend, a Node.js-based logic (middle) tier, and a MongoDB database.
+This projet is successfully designed and implemented with a robust 3-pipeline system to automate key processes for deploying a Kubernetes cluster, managing ECR image workflows, and orchestrating the deployment of an Amazon Load Balancer with an Ingress Controller. 
 
-[![YouTube Video](https://img.youtube.com/vi/tvWQRTbMS1g/maxresdefault.jpg)](https://youtu.be/tvWQRTbMS1g?si=eki-boMemxr4PU7-)
+## Application Structure
+
+- **frontend:** Contains the React-based frontend code.
+- **middle-tier:** Houses the Node.js-based logic tier.
+- **database:** Holds configurations for MongoDB.
 
 ## Prerequisites
-- Basic knowledge of Docker, and AWS services.
-- An AWS account with necessary permissions.
+- Create a IAM User with Administartor Access. Create Access Key as well and save it for later use.![IAM 1](https://github.com/Aniket-d-d/TWSThreeTierAppChallenge/assets/57555096/8348460c-3741-4497-9e98-d06fb1b76563)
+- Create a ECR with two public repositories named: ```three-tier-backend``` and ```three-tier-frontend```.
+  ![repositories](https://github.com/Aniket-d-d/TWSThreeTierAppChallenge/assets/57555096/a47ae951-0995-4a87-8aec-8ac846e5e544)
 
-## Challenge Steps
+ Note down your public repositories default alias and update it in variables file with ```ALIAS_INFO``` variable.
+- Update your domain name in variables file.
+- Update your update ```ACCOUNT ID``` in variable file.
+Note: variables file above is created to set account ID, Domain name and ECR's default alias. This is done so that there variables will be updated automatically in commands to be executed in Pielines. 
 
-### Step 1: IAM Configuration
-- Create a user `eks-admin` with `AdministratorAccess`.
-- Generate Security Credentials: Access Key and Secret Access Key.
+## Automated Installation
 
-### Step 2: EC2 Setup
-- Launch an Ubuntu instance in your favourite region (eg. region `us-west-2`).
-- SSH into the instance from your local machine.
+### Create and Initial EC2 Instance:
+- Name the EC2 Instance as ```ak-three-tier-hq```
+- Select Ubuntu AMI and t2.medium as Instance.type.
+- In security group open access to port 8080 for accessing Jenkins.
+- Configure storage to 20 Gb
+- In Advanced details section copy-paste all the data from ```installUD.sh``` file into user-data box.
+- Hit launch Instance.
+- All the required things will be installed in the hq instance now. Like docker, jenkins, aws cliv2, helm, kubectl, eksctl.
 
-### Step 3: Install AWS CLI v2
-``` shell
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-sudo apt install unzip
-unzip awscliv2.zip
-sudo ./aws/install -i /usr/local/aws-cli -b /usr/local/bin --update
-aws configure
-```
+### Access the Jenkins:
+- SSH into hq instance. To get Jenkins password use command: ```sudo cat /var/lib/jenkins/secrets/initialAdminPassword```
+- Access the Jenkins on VM_IP:8080.
+  ![unlock jenkins](https://github.com/Aniket-d-d/TWSThreeTierAppChallenge/assets/57555096/9ac3254a-a564-4bf7-92de-0a65368e655d)
+- After putting Password click next. Click on ```Install Suggested Plugins.```
+![suggested plugin](https://github.com/Aniket-d-d/TWSThreeTierAppChallenge/assets/57555096/b007a5db-4873-4410-b649-54c609a38d4c)
+- Click on ```Skip and continue as Admin```.
+- Click ```Save and Finish```.
+- Click ```Start Using Jenkins```.
+  ![jenkins ready](https://github.com/Aniket-d-d/TWSThreeTierAppChallenge/assets/57555096/2ac54a08-ad46-42c1-8119-a15b58e9af93)
 
-### Step 4: Install Docker
-``` shell
-sudo apt-get update
-sudo apt install docker.io
-docker ps
-sudo chown $USER /var/run/docker.sock
-```
 
-### Step 5: Install kubectl
-``` shell
-curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
-chmod +x ./kubectl
-sudo mv ./kubectl /usr/local/bin
-kubectl version --short --client
-```
+### Install Plugin and Create Credentials:
+- Click on Manage Jenkins.
+- Click on Plugins.
+- Click on Available Plugins on sidebar.
+- Search  for ```AWS Credentails``` plugin.
+  ![insatllplugin](https://github.com/Aniket-d-d/TWSThreeTierAppChallenge/assets/57555096/5d70797a-5820-46f2-8699-0dda35f848c9)
+- Click on the plugin check box and click on Install.
+Now to Create Credentails for AWS and Mongo Database.
+- Goto Credentials in Manage Jenkins.
+- Click on Add Credentials.
+- In kind Select AWS Credentials option.
+- Put Access Key and Secret Access Key as require.
+- Note Set ID as ```aws-cli-cred```. This id name is important.
+  ![aws credentials](https://github.com/Aniket-d-d/TWSThreeTierAppChallenge/assets/57555096/d3df5539-49c6-4d25-bbf4-5f33c0b8d8c5)
+- Similary for MongoDB credentials in kind Select Username and Password options only.
+- Set Id as ```mongo-pass```.This id name is important.
+- Set Username and Password as per your wish.
+![Credentailadisplay](https://github.com/Aniket-d-d/TWSThreeTierAppChallenge/assets/57555096/01c87fd7-6ed2-4fd9-bf3d-5d9b2e185649)
 
-### Step 6: Install eksctl
-``` shell
-curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-sudo mv /tmp/eksctl /usr/local/bin
-eksctl version
-```
 
-### Step 7: Setup EKS Cluster
-``` shell
-eksctl create cluster --name three-tier-cluster --region us-west-2 --node-type t2.medium --nodes-min 2 --nodes-max 2
-aws eks update-kubeconfig --region us-west-2 --name three-tier-cluster
-kubectl get nodes
-```
+### Create and Run Jobs:
+-  Create three pipeline jobs with names ```create-cluster-pipeline```, ```deploy-app```, ```push-images-pipeline```.
+  ![pipelinetype](https://github.com/Aniket-d-d/TWSThreeTierAppChallenge/assets/57555096/86e21cd6-aad3-43e2-a4de-f7072a0eb457)
 
-### Step 8: Run Manifests
-``` shell
-kubectl create namespace workshop
-kubectl config set-context --current --namespace workshop
-kubectl apply -f .
-kubectl delete -f .
-```
+-  Copy paste the groovy script for respective pipline from jenkins-pipeline/ folder above.
+![pipelines view](https://github.com/Aniket-d-d/TWSThreeTierAppChallenge/assets/57555096/409bd096-4594-4ddb-b1ec-3c707a5fc189)
+-  Run ```create-cluster-pipeline```, ```push-images-pipeline```jobs simultaneously.
+-  Creating cluster will take time. Images will be pushed to ECR.
+Note: These pipelines will create the cluster, push the images to the container registry and deploy the load balancer and ingress controller as well automatically. Here selecting t2.medium will come handy, as we will be able to run two jobs simultaneouly.
 
-### Step 9: Install AWS Load Balancer
-``` shell
-curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json
-aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam_policy.json
-eksctl utils associate-iam-oidc-provider --region=us-west-2 --cluster=three-tier-cluster --approve
-eksctl create iamserviceaccount --cluster=three-tier-cluster --namespace=kube-system --name=aws-load-balancer-controller --role-name AmazonEKSLoadBalancerControllerRole --attach-policy-arn=arn:aws:iam::626072240565:policy/AWSLoadBalancerControllerIAMPolicy --approve --region=us-west-2
-```
+### Access the application:
+- Check the deploy-app pipeline logs to get the Ingress Address.
+  ![ingress address](https://github.com/Aniket-d-d/TWSThreeTierAppChallenge/assets/57555096/fc02d415-c1a6-4a1f-b5da-2d52027673fd)
+- Update the CNAME NS record in you DNS MAnagement with the Ingress Address.
+  ![dns-management](https://github.com/Aniket-d-d/TWSThreeTierAppChallenge/assets/57555096/2201e794-d20d-4424-958b-3d1dfea9c283)
+- Voila You will be ale to access the application.
+![final app](https://github.com/Aniket-d-d/TWSThreeTierAppChallenge/assets/57555096/ef4400fe-2922-4c1e-8237-e83bb58cffc7)
 
-### Step 10: Deploy AWS Load Balancer Controller
-``` shell
-sudo snap install helm --classic
-helm repo add eks https://aws.github.io/eks-charts
-helm repo update eks
-helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=my-cluster --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller
-kubectl get deployment -n kube-system aws-load-balancer-controller
-kubectl apply -f full_stack_lb.yaml
-```
+### Contribution
+Contributions are welcome! If you encounter any issues or have suggestions for improvements, please open an issue or create a pull request.
 
-### Cleanup
-- To delete the EKS cluster:
-``` shell
-eksctl delete cluster --name three-tier-cluster --region us-west-2
-```
+### Note:
+- I have used sed commands and shell scripts to update the piplines according to the variables described in variables file above. 
+- Please reach out for any clarifications about pipelines in this challenge.
 
-## Contribution Guidelines
-- Fork the repository and create your feature branch.
-- Deploy the application, adding your creative enhancements.
-- Ensure your code adheres to the project's style and contribution guidelines.
-- Submit a Pull Request with a detailed description of your changes.
-
-## Rewards
-- Successful PR merges will be eligible for exciting prizes!
-
-## Support
-For any queries or issues, please open an issue in the repository.
-
----
-Happy Learning! 🚀👨‍💻👩‍💻
