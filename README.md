@@ -64,6 +64,7 @@ kubectl get nodes
 ### Step 8: Run Manifests
 ``` shell
 kubectl create namespace workshop
+kubectl config set-context --current --namespace workshop
 kubectl apply -f .
 kubectl delete -f .
 ```
