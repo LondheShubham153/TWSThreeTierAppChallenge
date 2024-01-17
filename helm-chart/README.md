@@ -12,7 +12,7 @@ Helm chart follows some file structure and the structure for this application is
 
   <br>
 
-  ![chart](https://github.com/LondheShubham153/TWSThreeTierAppChallenge/assets/108048384/d680daa7-1f6d-4f79-85f7-b7baa4accec8)
+![Helm-chart](https://github.com/LondheShubham153/TWSThreeTierAppChallenge/assets/108048384/adb2adb9-4ec7-4a6b-833d-1269860b149f)
 
 
 ## Prerequisites ##
