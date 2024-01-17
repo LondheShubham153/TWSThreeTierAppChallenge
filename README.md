@@ -140,6 +140,16 @@ kubectl get deployment -n kube-system aws-load-balancer-controller
 kubectl apply -f full_stack_lb.yaml
 ```
 
+### Important for CI/CD
+> - If you want to add Continuous Deployment (CD) you need to make a bit changes in the github workflow's `.github/workflows/cicd.yaml` file.
+>
+> - Create all the secret variables that are listed under the `env` section in `cicd.yaml`. For creating them follow the below steps:
+>   - Go to settings -> Security (Secrets and variables) -> Actions -> New repository secret -> Give Secret name and value -> Add secret.
+>
+> - Pass your own env varibales that you've created and replace them with mine including AWS CLI, AWS ECR, AWS EKS, and more.
+>
+> - Your AWS EKS Cluster should be up and running for smooth and Continuous Delivery (CD) implementation.
+
 ### Cleanup
 - To delete the EKS cluster:
 ``` shell
