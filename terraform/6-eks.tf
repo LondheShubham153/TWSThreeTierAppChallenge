@@ -25,6 +25,7 @@ resource "aws_iam_role_policy_attachment" "demo_amazon_eks_cluster_policy" {
 resource "aws_eks_cluster" "demo" {
   name     = "demo"
   role_arn = aws_iam_role.demo.arn
+  version = "1.28"
 
   vpc_config {
     subnet_ids = [

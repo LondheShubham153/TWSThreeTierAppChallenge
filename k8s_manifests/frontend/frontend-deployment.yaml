@@ -7,7 +7,7 @@ metadata:
     role: frontend
     env: demo
 spec:
-  replicas: 1
+  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -25,10 +25,17 @@ spec:
       - name: ecr-registry
       containers:
       - name: frontend
-        image: ${frontend_registry}:${BUILD_NUMBER}
-        imagePullPolicy: Always
+        image: 807373741966.dkr.ecr.us-east-1.amazonaws.com/3tier_frontend:31
+        imagePullPolicy: IfNotPresent
         env:
           - name: REACT_APP_BACKEND_URL
             value: "http://app.sahil-devops.xyz/api/tasks" 
         ports:
         - containerPort: 3000
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"

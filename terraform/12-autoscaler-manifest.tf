@@ -21,7 +21,7 @@ metadata:
   name: cluster-autoscaler
   namespace: kube-system
   annotations:
-    eks.amazonaws.com/role-arn: aws_iam_role.eks_cluster_autoscaler.arn
+    eks.amazonaws.com/role-arn: ${aws_iam_role.eks_cluster_autoscaler.arn}
 EOF
 }
 
@@ -156,6 +156,8 @@ metadata:
   namespace: kube-system
   labels:
     app: cluster-autoscaler
+  annotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: 'false'
 spec:
   replicas: 1
   selector:
@@ -173,7 +175,7 @@ spec:
         fsGroup: 65534
       serviceAccountName: cluster-autoscaler
       containers:
-        - image: registry.k8s.io/autoscaling/cluster-autoscaler:v1.28.0
+        - image: registry.k8s.io/autoscaling/cluster-autoscaler:v1.28.2
           name: cluster-autoscaler
           resources:
             limits:
@@ -189,7 +191,10 @@ spec:
             - --cloud-provider=aws
             - --skip-nodes-with-local-storage=false
             - --expander=least-waste
-            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/aws_eks_cluster.demo.name
+            - --scale-down-delay-after-add=5m
+            - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/${aws_eks_cluster.demo.name}
+            - --balance-similar-node-groups
+            - --skip-nodes-with-system-pods=false
           volumeMounts:
             - name: ssl-certs
               mountPath: /etc/ssl/certs/ca-certificates.crt

@@ -28,14 +28,24 @@ resource "aws_iam_role_policy_attachment" "nodes_amazon_ec2_container_registry_r
   role       = aws_iam_role.nodes.name
 }
 
+resource "aws_launch_configuration" "eks_nodes_launch_config" {
+  name = "eks-nodes-launch-config"
+  
+  image_id = "ami-06aa3f7caf3a30282"  # Specify your desired AMI ID
+  instance_type = "t3.medium"        # Specify your desired instance type
+
+  user_data = <<-EOF
+              #!/bin/bash
+              echo '/c/Users/pc/.ssh/id_rsa.pub' >> /home/ubuntu/.ssh/authorized_keys
+              EOF
+}
+
+
 resource "aws_eks_node_group" "private_nodes" {
   cluster_name    = aws_eks_cluster.demo.name
   node_group_name = "private-nodes"
   node_role_arn   = aws_iam_role.nodes.arn
 
-  # remote_access {
-  #   ec2_ssh_key = "~/Desktop/Keypairs/jenkins-keypair.pem"
-  # }
   
   subnet_ids = [
     aws_subnet.private_us_east_1a.id,
@@ -65,12 +75,3 @@ resource "aws_eks_node_group" "private_nodes" {
     aws_iam_role_policy_attachment.nodes_amazon_ec2_container_registry_read_only,
   ]
 }
-
-# resource "aws_security_group_rule" "eks_worker_nodes_ssh" {
-#   security_group_id = aws_eks_node_group.private_nodes.remote_access_security_group_id
-#   type              = "ingress"
-#   from_port         = 22
-#   to_port           = 22
-#   protocol          = "tcp"
-#   cidr_blocks       = ["0.0.0.0/0"]
-# }
