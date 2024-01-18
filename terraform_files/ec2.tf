@@ -42,7 +42,7 @@ resource "aws_security_group" "terraform-instance-sg" {
   vpc_id      = "vpc-0a35a83de5d6649ab"
 
   ingress = [
-    for port in [22, 80, 443, 8080] : {
+    for port in [22, 80, 443, 8080,3000] : {
       description      = "inbound rules"
       from_port        = port
       to_port          = port
