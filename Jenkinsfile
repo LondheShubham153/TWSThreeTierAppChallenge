@@ -58,7 +58,7 @@ pipeline {
                 withKubeConfig(caCertificate: '', clusterName: 'demo', contextName: '', credentialsId: 'k8s-token', namespace: 'workshop', restrictKubeConfigAccess: false, serverUrl: 'https://C0676E6ED674D57EE72D180BC2971B56.gr7.us-east-1.eks.amazonaws.com') {
 
                 echo 'deploying Metrics-server for HPA...'
-	                sh 'kubectl apply -f k8s_manifests/metrics-server/metric-server.yaml'
+	                sh 'kubectl apply -f k8s_manifests/metrics-server/metric-server.yml'
     			      
                 echo 'deploying MongoDB StatefulSet with PVs,PVCs...'
 	                sh 'kubectl apply -f k8s_manifests/mongo/'
