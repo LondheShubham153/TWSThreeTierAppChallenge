@@ -25,7 +25,7 @@ spec:
       - name: ecr-registry
       containers:
       - name: api
-        image: ${backend_registry}:{BUILD_NUMBER}
+        image: ${backend_registry}:${BUILD_NUMBER}
         imagePullPolicy: IfNotPresent
         env:
           - name: MONGO_CONN_STR
