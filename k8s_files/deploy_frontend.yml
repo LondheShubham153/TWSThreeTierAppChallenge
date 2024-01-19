@@ -26,6 +26,6 @@ spec:
         imagePullPolicy: Always
         env:
           - name: REACT_APP_BACKEND_URL
-            value: "https://ajaycodelab.com/api/tasks" 
+            value: "http://ajaycodelab.com/api/tasks" 
         ports:
         - containerPort: 3000

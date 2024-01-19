@@ -2,9 +2,9 @@ resource "aws_instance" "my_instance" {
   count = length(var.instance_names)
 
 
-  ami                    = "ami-05fb0b8c1424f266b" # Specify the AMI ID for your desired Amazon Machine Image
-  instance_type          = "t2.large"
-  key_name               = "admin-ajay" # Change this to your key pair name
+  ami                    = var.ami_id # Specify the AMI ID for your desired Amazon Machine Image
+  instance_type          = var.instance_type
+  key_name               = "devops" # Change this to your key pair name
   vpc_security_group_ids = [aws_security_group.terraform-instance-sg.id]
   // iam_instance_profile = iam_instance_profile.my-profile.name
 
@@ -39,7 +39,7 @@ resource "iam_instance_profile" "my-profile" {
 resource "aws_security_group" "terraform-instance-sg" {
   name        = "terraform-created-sg"
   description = "Allow inbound ports 22, 8080"
-  vpc_id      = "vpc-0a35a83de5d6649ab"
+  vpc_id      = var.vpc_id
 
   ingress = [
     for port in [22, 80, 443, 8080,3000] : {
