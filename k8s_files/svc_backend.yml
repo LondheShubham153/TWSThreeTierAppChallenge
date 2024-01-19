@@ -5,7 +5,7 @@ metadata:
   namespace: 3-tier-app
 spec:
   ports:
-  - port: 8080
+  - port: 3500
     protocol: TCP
   type: ClusterIP
   selector:

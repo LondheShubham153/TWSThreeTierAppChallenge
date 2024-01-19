@@ -6,7 +6,7 @@ metadata:
   labels:
     tier: backend
 spec:
-  replicas: 1
+  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -38,17 +38,17 @@ spec:
                 name: mongo-secret
                 key: password
         ports:
-        - containerPort: 8080
+        - containerPort: 3500
         livenessProbe:
           httpGet:
             path: /ok
-            port: 8080
+            port: 3500
           initialDelaySeconds: 2
           periodSeconds: 5
         readinessProbe:
           httpGet:
              path: /ok
-             port: 8080
+             port: 3500
           initialDelaySeconds: 5
           periodSeconds: 5
           successThreshold: 1
