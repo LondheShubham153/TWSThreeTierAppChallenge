@@ -1,14 +1,6 @@
-FROM node:14-alpine
-
-WORKDIR /app/
-
+FROM node:14
+WORKDIR /usr/src/app
 COPY package*.json ./
-
-# Install dependencies
-RUN npm ci --only=production
-
+RUN npm install
 COPY . .
-
-CMD [ "npm","start" ]
-
-
+CMD [ "npm", "start" ]
