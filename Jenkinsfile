@@ -3,10 +3,11 @@ pipeline {
 	agent any
     
     environment {
+        account_id = credentials('account_id')
         registryCredential = 'ecr:us-east-1:awscreds'
-        backend_registry = '807373741966.dkr.ecr.us-east-1.amazonaws.com/3tier_backend'
-        frontend_registry = '807373741966.dkr.ecr.us-east-1.amazonaws.com/3tier_frontend'
-        ecr_registry = 'https://807373741966.dkr.ecr.us-east-1.amazonaws.com'
+        backend_registry = "${account_id}.dkr.ecr.us-east-1.amazonaws.com/3tier_backend"
+        frontend_registry = "${account_id}.dkr.ecr.us-east-1.amazonaws.com/3tier_frontend"
+        ecr_registry = "https://${account_id}.dkr.ecr.us-east-1.amazonaws.com"
     }
 	
     stages{
