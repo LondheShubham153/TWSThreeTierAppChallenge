@@ -5,9 +5,9 @@ metadata:
   namespace: workshop
 spec:
   minReplicas: 1
-  maxReplicas: 3
+  maxReplicas: 5
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: frontend
-  targetCPUUtilizationPercentage: 20
+  targetCPUUtilizationPercentage: 30

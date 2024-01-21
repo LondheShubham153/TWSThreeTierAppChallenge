@@ -28,6 +28,11 @@ resource "aws_iam_role_policy_attachment" "nodes_amazon_ec2_container_registry_r
   role       = aws_iam_role.nodes.name
 }
 
+resource "aws_iam_role_policy_attachment" "nodes_amazon_cloudwatch_agent_server_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+  role       = aws_iam_role.nodes.name
+}
+
 resource "aws_launch_configuration" "eks_nodes_launch_config" {
   name = "eks-nodes-launch-config"
   

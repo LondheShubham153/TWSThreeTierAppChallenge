@@ -39,3 +39,21 @@ spec:
           limits:
             cpu: "200m"
             memory: "256Mi"
+        # livenessProbe:
+        #     httpGet:
+        #       path: /
+        #       port: 3000
+        #     initialDelaySeconds: 30
+        #     periodSeconds: 5
+        #     timeoutSeconds: 10
+        #     successThreshold: 1
+        #     failureThreshold: 3
+        # readinessProbe:
+        #     httpGet:
+        #       path: /
+        #       port: 3000
+        #     initialDelaySeconds: 30
+        #     periodSeconds: 5
+        #     timeoutSeconds: 10
+        #     successThreshold: 3
+        #     failureThreshold: 3
