@@ -2,11 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: workshop
+  namespace: three-tier
   labels:
     role: frontend
     env: demo
-spec:
+spec: 
   replicas: 1
   strategy:
     type: RollingUpdate
@@ -14,20 +14,21 @@ spec:
       maxSurge: 1
       maxUnavailable: 25%
   selector:
-    matchLabels:
+    matchLabels: 
       role: frontend
   template:
     metadata:
       labels:
         role: frontend
-    spec:
+    spec: 
+      imagePullSecrets:
+      - name: ecr-registry-secret
       containers:
       - name: frontend
-        image: public.ecr.aws/e3i3d3z5/three-tier-frontend-d:latest
+        image: 407622020962.dkr.ecr.us-east-1.amazonaws.com/frontend:latest
         imagePullPolicy: Always
         env:
           - name: REACT_APP_BACKEND_URL
-            value: "http://app.trainwithshubham.com/api/tasks" 
+            value: "http://backend.amanpathakdevops.study/api/tasks"
         ports:
         - containerPort: 3000
-       
