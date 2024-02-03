@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
-metadata:
-  namespace: workshop
+metadata: 
+  namespace: three-tier
   name: mongodb
-spec:
+spec: 
   replicas: 1
   selector:
     matchLabels:
       app: mongodb
   template:
     metadata:
-      labels:
+      labels: 
         app: mongodb
-    spec:
+    spec: 
       containers:
-      - name: mongodb
+      - name: mon
         image: mongo:4.4.6
         command:
             - "numactl"
@@ -26,14 +26,7 @@ spec:
             - "0.0.0.0"
         ports:
         - containerPort: 27017
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "1Gi"
-            cpu: "500m"
-        env:
+        env: 
           - name: MONGO_INITDB_ROOT_USERNAME
             valueFrom:
               secretKeyRef:
@@ -44,10 +37,10 @@ spec:
               secretKeyRef:
                 name: mongo-sec
                 key: password
-      #   volumeMounts:
-      #     - name: mongo-volume
-      #       mountPath: /data/db
-      # volumes:
-      # - name: mongo-volume
-      #   persistentVolumeClaim:
-      #     claimName: mongo-volume-claim
+        volumeMounts:
+          - name: mongo-volume
+            mountPath: /data/db
+      volumes: 
+      - name: mongo-volume
+        persistentVolumeClaim:
+          claimName: mongo-volume-claim
