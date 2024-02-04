@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+  
+    stages {
+        stage('Clean Workspace ') {
+            steps {
+                echo "Cleaning Workspace:"
+                cleanWs()
+            }
+        }
+        
+        stage('Provision EKS Cluster') {
+            steps {
+                echo "Creating EKS Cluster:"
+                sh "eksctl create cluster --name three-tier-cluster --region us-west-2 --node-type t2.medium --nodes-min 2 --nodes-max 2"
+                echo "Updating kubeconfig:"
+                sh "aws eks update-kubeconfig --region us-west-2 --name three-tier-cluster"
+                echo "EKS nodes:"
+                sh "kubectl get nodes"
+            }
+        }
+    }
+}
