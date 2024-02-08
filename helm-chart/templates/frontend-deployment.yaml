@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontends
+  namespace: workshop
+  labels:
+    role: frontends
+    env: demo
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      role: frontends
+  template:
+    metadata:
+      labels:
+        role: frontends
+    spec:
+      containers:
+      - name: frontends
+        image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+        imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+        env:
+          - name: REACT_APP_BACKEND_URL
+            value: "http://<your-domain-name>/api/tasks"
+        ports:
+        - containerPort: 3000
