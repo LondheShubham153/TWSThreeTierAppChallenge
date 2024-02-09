@@ -1,0 +1,119 @@
+pipeline {
+    agent any
+    
+    environment{
+        SCANNER_HOME= tool "sonar"
+    }
+
+    stages {
+        stage('Jenkins: Clean Workspace ') {
+            steps {
+                cleanWs()
+            }
+        }
+        
+        stage("Git: Code Checkout"){
+            steps{
+                git url: "https://github.com/Nehabisen21/TWSThreeTierAppChallenge.git", branch: "main"
+            }
+        }
+        
+        stage("SonarQube: Code Analysis"){
+            steps{
+                withSonarQubeEnv("sonar"){
+                 sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=threetierapp -Dsonar.projectName=threetierapp'''
+                }
+            }
+        }
+
+        stage("SonarQube: Code Quality Gates Check"){
+            steps{
+                timeout(time: 2, unit: "MINUTES"){
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage("OWASP: Dependency Check"){
+            steps{
+                dependencyCheck additionalArguments: '--scan ./', odcInstallation: 'DC'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+
+        stage("Trivy: File system Scan"){
+            steps{
+                sh 'trivy fs . > trivy-fs-report.txt'
+            }
+        }
+
+        stage("Docker: Build image and push to AWS ECR"){
+            steps{
+                dir("/var/lib/jenkins/workspace/App/frontend"){
+                //ECR Login
+                sh 'aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/m5h4e3m3'
+
+                //Docker Build frontend
+                sh 'docker build -t threetier .'
+                
+                //Docker tag
+                sh 'docker tag threetier:latest public.ecr.aws/m5h4e3m3/threetier:latest'
+
+                //Docker push
+                sh 'docker push public.ecr.aws/m5h4e3m3/threetier:latest'
+
+                //Docker Build Backend
+                sh 'docker build -t backend .'
+
+                //Docker tag
+                sh 'docker tag backend:latest public.ecr.aws/m5h4e3m3/backend:latest'
+
+                //Docker push
+                sh 'docker push public.ecr.aws/m5h4e3m3/backend:latest'
+                }     
+            }
+        }
+    
+     stage("Deploy to K8s"){
+        steps{
+            script{
+                dir('k8s_manifests/mongo'){
+                    withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'K8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                        sh 'kubectl create namespace workshop'
+                        sh 'kubectl apply -f secrets.yaml'
+                        sh 'kubectl apply -f deploy.yaml'
+                        sh 'kubectl apply -f service.yaml'
+                }
+                }
+                dir('k8s_manifests'){
+                    withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'K8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                        sh 'kubectl apply -f backend-deployment.yaml'
+                        sh 'kubectl apply -f backend-service.yaml'
+                        sh 'kubectl apply -f frontend-deployment.yaml'
+                        sh 'kubectl apply -f frontend-service.yaml'
+                        sh 'kubectl apply -f full_stack_lb.yaml'
+                  }
+                }
+              }
+            }
+          }
+        }
+        post{
+            always{
+                emailext(
+                    subject: "Build ${BUILD_STATUS} - ${BUILD_NUMBER}",
+                    body: '''<html>
+                                <body>
+                                    <li>Build status: ${BUILD_STATUS}</li>
+                                    <li>Build Logs: ${BUILD_URL}</li>
+                                </body>
+                             </html>''',
+                    to: 'bisen.neha21@gmail.com',
+                    from: 'bisen.neha21@gmail.com',
+                    replyTo: 'bisen.neha21@gmail.com',
+                    mimeType: 'text/html'
+                        
+                )
+            }
+        }
+}
