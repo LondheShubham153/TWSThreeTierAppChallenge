@@ -14,6 +14,19 @@ spec:
       labels:
         app: mongodb
     spec:
+      # affinity:
+      #   podAntiAffinity:
+      #     preferredDuringSchedulingIgnoredDuringExecution:
+      #       - weight: 100
+      #         podAffinityTerm:
+      #           labelSelector:
+      #             matchExpressions:
+      #               - key: app
+      #                 operator: In
+      #                 values:
+      #                   - mongodb
+      #           topologyKey: kubernetes.io/hostname
+      terminationGracePeriodSeconds: 10
       containers:
       - name: mongodb
         image: mongo:4.4.6
@@ -56,6 +69,4 @@ spec:
         resources:
           requests:
             storage: 1Gi
-        storageClassName: ebs-sc  
-     
-  
+        storageClassName: ebs-sc

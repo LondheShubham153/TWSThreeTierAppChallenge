@@ -26,6 +26,6 @@ stringData:
       slack_configs:
       - channel: "#vprofile-jenkins"
         send_resolved: true
-        api_url: https://hooks.slack.com/services/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
+        api_url: https://hooks.slack.com/services/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
         title: "[Alert] {{ .GroupLabels.alertname }}"
         text: "{{ range .Alerts }}{{ .Annotations.message }}\n{{ end }}"

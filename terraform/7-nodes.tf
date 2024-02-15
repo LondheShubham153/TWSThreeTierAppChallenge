@@ -28,17 +28,22 @@ resource "aws_iam_role_policy_attachment" "nodes_amazon_ec2_container_registry_r
   role       = aws_iam_role.nodes.name
 }
 
-resource "aws_launch_configuration" "eks_nodes_launch_config" {
-  name = "eks-nodes-launch-config"
-  
-  image_id = "ami-06aa3f7caf3a30282"  # Specify your desired AMI ID
-  instance_type = "t3.medium"        # Specify your desired instance type
+# resource "aws_iam_role_policy_attachment" "nodes_amazon_cloudwatch_agent_server_policy" {
+#   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+#   role       = aws_iam_role.nodes.name
+# }
 
-  user_data = <<-EOF
-              #!/bin/bash
-              echo '/c/Users/pc/.ssh/id_rsa.pub' >> /home/ubuntu/.ssh/authorized_keys
-              EOF
-}
+# resource "aws_launch_configuration" "eks_nodes_launch_config" {
+#   name = "eks-nodes-launch-config"
+  
+#   image_id = "ami-06aa3f7caf3a30282"  # Specify your desired AMI ID
+#   instance_type = "t3.medium"        # Specify your desired instance type
+
+#   user_data = <<-EOF
+#               #!/bin/bash
+#               echo '/c/Users/pc/.ssh/id_rsa.pub' >> /home/ubuntu/.ssh/authorized_keys
+#               EOF
+# }
 
 
 resource "aws_eks_node_group" "private_nodes" {
@@ -56,7 +61,7 @@ resource "aws_eks_node_group" "private_nodes" {
   instance_types = ["t3.medium"]
 
   scaling_config {
-    desired_size = 2
+    desired_size = 1
     max_size     = 5
     min_size     = 0
   }

@@ -25,9 +25,6 @@ terraform {
     bucket = "twschallenge-terraform"
     key    = "terraform.tfstate"
     region = "us-east-1"
-
-    #   # For State Locking
-    #   dynamodb_table = "ekscluster" 
   }
   
 }

@@ -5,7 +5,7 @@ metadata:
   name: demo
   namespace: monitoring
 spec:
-  version: v2.25.0
+  version: v2.45.2
   alerting:
     alertmanagers:
     - namespace: monitoring

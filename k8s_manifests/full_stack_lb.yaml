@@ -5,9 +5,11 @@ metadata:
   name: mainlb
   namespace: workshop
   annotations:
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:807373741966:certificate/4fafdf60-7738-4aea-b4c9-f8ce56267aeb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
 spec:
   ingressClassName: alb
   rules:
