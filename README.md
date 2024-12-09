@@ -128,6 +128,12 @@ kubectl apply -f full_stack_lb.yaml
 ``` shell
 eksctl delete cluster --name three-tier-cluster --region us-west-2
 ```
+- To clean up rest of the stuff and not incure any cost
+```
+Stop or Terminate the EC2 instance created in step 2.
+Delete the Load Balancer created in step 9 and 10.
+Go to EC2 console, access security group section and delete security groups created in previous steps
+```
 
 ## Contribution Guidelines
 - Fork the repository and create your feature branch.
