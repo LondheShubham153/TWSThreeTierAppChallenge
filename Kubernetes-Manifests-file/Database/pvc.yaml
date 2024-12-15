@@ -3,10 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: mongo-volume-claim
   namespace: three-tier
-spec: 
-  accessModes:  
+spec:
+  accessModes:
     - ReadWriteOnce
-  storageClassName: ""
   resources:
     requests:
-      storage: 1Gi
+      storage: 1Gi  # You can adjust this size based on your needs
+  storageClassName: standard  # You can change the storage class if necessary
